@@ -22,6 +22,15 @@
     mode: "0755"
     state: directory
 
+- name: generate env file
+  template:
+    src: "env.j2"
+    dest: "/opt/registry/.env"
+    owner: registry
+    group: registry
+    mode: "0600"
+  notify: restart container
+
 - name: create systemd
   template:
     src: service.j2

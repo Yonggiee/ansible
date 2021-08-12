@@ -1,2 +1,6 @@
 cluster: stg
 registry_version: 2.7.1
+registry_storage_s3_bucket: reg2yj
+registry_storage_s3_rootdirectory: stg-registry
+registry_storage_s3_region: ap-southeast-1
+registry_log_level: DEBUG
