@@ -1,0 +1,17 @@
+- name: update repo
+  apt:
+    update_cache: yes
+
+- name: install docker
+  apt:
+    name:
+      - python-docker
+    state: present
+    update_cache: yes
+
+# - name: install additional packages
+#   apt:
+#     name:
+#       - docker.io
+#     state: present
+#     update_cache: yes

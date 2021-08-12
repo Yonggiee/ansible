@@ -1,0 +1,2 @@
+- name: print to stdout
+  command: echo "hello"

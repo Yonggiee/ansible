@@ -1,0 +1,4 @@
+- name: restart container
+  service:
+    name: registry
+    state: restarted

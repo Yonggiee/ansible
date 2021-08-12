@@ -1,0 +1,21 @@
+[Unit]
+Description=Run registry container
+After=network-online.target
+Requires=network-online.target
+StartLimitIntervalSec=5
+StartLimitBurst=2
+
+[Service]
+ExecStart=/usr/bin/docker run --rm -v /opt/registry/log:/var/log/registry --name registry registry:{{ registry_version }}
+
+ExecStop=/usr/bin/docker stop registry
+
+WorkingDirectory=/opt/registry
+StandardOutput=journal+console
+User=registry
+Group=registry
+TimeoutSec=120
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
