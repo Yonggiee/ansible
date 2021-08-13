@@ -34,7 +34,7 @@
     mode: "0600"
   notify: restart container
 
-- name: Create a directory if it does not exist
+- name: create a directory if it does not exist
   file:
     path: "/opt/registry/auth"
     owner: registry
@@ -44,22 +44,10 @@
   
 - name: generate temp htpasswd file
   shell:
-    cmd: /usr/bin/docker run --entrypoint htpasswd httpd:2 -Bbn sreobs a > temp
+    cmd: /usr/bin/docker run --entrypoint htpasswd httpd:2 -Bbn {{ username }} {{ pass }} > temp
     chdir: /opt/registry/auth
     creates: temp
-
-- name: Replace htpasswd file
-  copy:
-    remote_src: yes
-    src: "/opt/registry/auth/temp"
-    dest: "/opt/registry/auth/htpasswd"
-    force: yes
-  notify: restart container
-
-- name: Remove temp file
-  file:
-    path: "/opt/registry/auth/temp"
-    state: absent
+  notify: replace htpasswd file
 
 - name: create systemd
   template:

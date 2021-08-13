@@ -2,3 +2,17 @@
   service:
     name: registry
     state: restarted
+
+- name: replace htpasswd file
+  copy:
+    remote_src: yes
+    src: "/opt/registry/auth/temp"
+    dest: "/opt/registry/auth/htpasswd"
+    force: yes
+  notify: remove temp file
+
+- name: remove temp file
+  file:
+    path: "/opt/registry/auth/temp"
+    state: absent
+  notify: restart container
