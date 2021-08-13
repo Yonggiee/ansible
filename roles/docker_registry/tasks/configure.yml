@@ -33,24 +33,32 @@
     group: registry
     mode: "0600"
   notify: restart container
+
+- name: Create a directory if it does not exist
+  file:
+    path: "/opt/registry/auth"
+    owner: registry
+    group: registry
+    mode: "0755"
+    state: directory
   
 - name: generate temp htpasswd file
-  ansible.builtin.shell:
+  shell:
     cmd: /usr/bin/docker run --entrypoint htpasswd httpd:2 -Bbn sreobs a > temp
-    chdir: /opt/registry
+    chdir: /opt/registry/auth
     creates: temp
 
 - name: Replace htpasswd file
   copy:
     remote_src: yes
-    src: "/opt/registry/temp"
-    dest: "/opt/registry/htpasswd"
+    src: "/opt/registry/auth/temp"
+    dest: "/opt/registry/auth/htpasswd"
     force: yes
   notify: restart container
 
 - name: Remove temp file
   file:
-    path: "/opt/registry/temp"
+    path: "/opt/registry/auth/temp"
     state: absent
 
 - name: create systemd

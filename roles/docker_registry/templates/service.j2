@@ -6,7 +6,7 @@ StartLimitIntervalSec=5
 StartLimitBurst=2
 
 [Service]
-ExecStart=/usr/bin/docker run --rm -p 5000:5000 -v /opt/registry/log:/var/log/registry --name registry --env-file /opt/registry/.env registry:{{ registry_version }}
+ExecStart=/usr/bin/docker run --rm -p 5000:5000 -v /opt/registry/log:/var/log/registry -v /opt/registry/auth:/auth --name registry --env-file /opt/registry/.env registry:{{ registry_version }}
 
 ExecStop=/usr/bin/docker stop registry
 
