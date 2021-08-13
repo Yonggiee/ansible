@@ -9,9 +9,9 @@
     state: present
     update_cache: yes
 
-# - name: install additional packages
-#   apt:
-#     name:
-#       - docker.io
-#     state: present
-#     update_cache: yes
+- name: install additional packages
+  apt:
+    name:
+      - docker.io
+    state: present
+    update_cache: yes

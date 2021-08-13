@@ -8,11 +8,14 @@
 
 - name: pull the docker image
   docker_image:
-    name: "registry:{{ registry_version }}"
+    name: "{{ item }}"
     source: pull
     force_source: yes
   retries: 8
   ignore_errors: yes
+  with_items:
+    - "registry:{{ registry_version }}"
+    - httpd:2
 
 - name: create folders
   file:
@@ -30,6 +33,25 @@
     group: registry
     mode: "0600"
   notify: restart container
+  
+- name: generate temp htpasswd file
+  ansible.builtin.shell:
+    cmd: /usr/bin/docker run --entrypoint htpasswd httpd:2 -Bbn sreobs a > temp
+    chdir: /opt/registry
+    creates: temp
+
+- name: Replace htpasswd file
+  copy:
+    remote_src: yes
+    src: "/opt/registry/temp"
+    dest: "/opt/registry/htpasswd"
+    force: yes
+  notify: restart container
+
+- name: Remove temp file
+  file:
+    path: "/opt/registry/temp"
+    state: absent
 
 - name: create systemd
   template:
@@ -39,3 +61,13 @@
     group: root
     mode: "0644"
   notify: restart container 
+
+
+# docker run -d \
+#   -p 5000:5000 \
+#   --restart=always \
+#   -v /Users/jay/desktop/auth:/auth \
+#   -e "REGISTRY_AUTH=htpasswd" \
+#   -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+#   -e REGISTRY_AUTH_HTPASSWD_PATH=auth/htpasswd \
+#   registry:2.7.1

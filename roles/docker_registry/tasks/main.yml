@@ -3,8 +3,8 @@
     file: "vars/{{ cluster }}.yml"
   failed_when: false
 
-# - name: install packages
-#   import_tasks: install.yml
+- name: install packages
+  import_tasks: install.yml
 - name: create new user and pull docker
   import_tasks: configure.yml
 
